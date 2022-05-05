@@ -27,7 +27,7 @@ framey=0
 def sendtoardu():
   #do math here to convert screen position to servo angle
   #trial and error the servo angle
-  xangle=mx*(66/framex)+ 56
+  xangle=mx*(66/framex)+56
   yangle=my*(66/framey)+56
 
   ardu.write(str("x").encode())
