@@ -62,6 +62,7 @@ if __name__ == "__main__":
   eyecas=cv.CascadeClassifier('haareye.xml')
   framex=vid.get(cv.CAP_PROP_FRAME_WIDTH)
   framey=vid.get(cv.CAP_PROP_FRAME_HEIGHT)
+  cv.namedWindow('img')
   while(True):
     ret,frame=vid.read()
     
@@ -78,9 +79,10 @@ if __name__ == "__main__":
         mx=x+w/2
         my=y+h/2
         #cv.circle(frame,(250,250),radius=100,color=(0,0,126),thickness=-1)
-        cv.circle(frame,(int(mx),int(my)),radius=10,color=(0,0,255),thickness=3)
+        
         #cv.rectangle(frame,(x,y),(x+w,y+h),(0,0,255), thickness=5)
-    cv.circle(frame,(int(framex/2),int(framey/2)),radius=10,color=(255,0,0),thickness=-1)
+    #cv.circle(frame,(int(framex/2),int(framey/2)),radius=10,color=(255,0,0),thickness=-1)
+    cv.circle(frame,(int(mx),int(my)),radius=10,color=(0,0,255),thickness=3)
     cv.imshow('img',frame)
     
 
