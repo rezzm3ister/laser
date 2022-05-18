@@ -5,10 +5,15 @@ import numpy as np
 import serial
 import serial.tools.list_ports
 from multiprocessing import Process
+from time import sleep
 
-mode = 1
+mode = 2
 # 0 = drag on screen
 # 1 = eye tracking
+# 2 = centering
+haarmode=1
+# 0 = no glasses
+# 1 = glasses
 
 
 def getport():
@@ -23,18 +28,21 @@ mx=0
 my=0
 framex=0
 framey=0
+xbytes=0
+ybytes=0
 
 def sendtoardu():
-  #do math here to convert screen position to servo angle
-  #trial and error the servo angle
-  xangle=mx*(66/framex)+56
-  yangle=my*(66/framey)+56
+ 
 
-  ardu.write(str("x").encode())
-  ardu.write(str(xangle).encode())
-  ardu.write(str(yangle).encode())
-  print(xangle,' ',yangle)
-  
+  sx=int(np.interp(mx,[0,640],[120,60]))
+  sy=int(np.interp(my,[0,480],[110,70]))
+
+  ardu.write(bytes([255]))
+  ardu.write(bytes([sx]))
+  ardu.write(bytes([254]))
+  ardu.write(bytes([sy]))
+
+   
 def click_event(event,x,y,flags,params):
   global hold, mx, my
   if event==cv.EVENT_LBUTTONDOWN:
@@ -55,23 +63,27 @@ def click_event(event,x,y,flags,params):
     hold=0
   
 
-  
-  
 if __name__ == "__main__":
   vid=cv.VideoCapture(1) #trial and error to find the right cam
-  eyecas=cv.CascadeClassifier('haareye.xml')
+  if haarmode==1:
+    eyecas=cv.CascadeClassifier('haareye.xml')
+  else:
+    eyecas=cv.CascadeClassifier('haarglasses.xml')
+
   framex=vid.get(cv.CAP_PROP_FRAME_WIDTH)
   framey=vid.get(cv.CAP_PROP_FRAME_HEIGHT)
   cv.namedWindow('img')
   while(True):
     ret,frame=vid.read()
-    
+    #frame=cv.cvtColor(frame,cv.COLOR_BGR2GRAY)
+        
     #cv.imshow('img',frame)
     if cv.waitKey(1) & 0xFF == ord('q'):
       break
     if mode==0:
       cv.setMouseCallback('img',click_event)
-    if mode==1:
+      #sleep(0.01)
+    elif mode==1:
       #ai here we go
       eyes=eyecas.detectMultiScale(frame,scaleFactor=1.1,minNeighbors=7)
 
