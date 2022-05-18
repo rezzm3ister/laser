@@ -7,10 +7,10 @@ import serial.tools.list_ports
 from multiprocessing import Process
 from time import sleep
 
-mode = 2
+mode = 1
 # 0 = drag on screen
 # 1 = eye tracking
-# 2 = centering
+
 haarmode=1
 # 0 = no glasses
 # 1 = glasses
